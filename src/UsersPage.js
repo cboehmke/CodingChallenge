@@ -21,7 +21,8 @@ componentDidMount() {
 }
 
 UsersPage.propTypes = {
-    users: React.PropTypes.array.isRequired
+    users: React.PropTypes.array.isRequired,
+    fetchUsers: React.PropTypes.func.isRequired
 }
 
 function mapStateToProps(state){
