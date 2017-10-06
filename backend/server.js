@@ -27,6 +27,25 @@ mongodb.MongoClient.connect(dbUrl, function(err, db) {
         });  
     });
 
+    app.put('/api/games/_id', (req, res) => {
+        const { errors, isValid } = validate(req.body);
+        if (isValid) {
+            const {id, email, firstName, lastName, jobTitle, birthday } = req.body;
+            db.collection('users').findOneAndUpdate(
+                { _id: new mongodb.ObjectId(req.params._id)},
+                { $set: {id, email, firstName, lastName, jobTitle, birthday }},
+                { returnOriginal: false},
+                (err, result) => {
+                    if (err) { res.status(500).json({ errors: { global: err}}); return; }
+
+                    res.json({user: result.value});
+                }
+            )
+        } else {
+            res.status(400).json({ errors });
+        }
+    });
+
     app.post('/api/users', (req, res) => {
         const { errors, isValid } = validate(req.body);
         if (isValid) {
@@ -41,7 +60,15 @@ mongodb.MongoClient.connect(dbUrl, function(err, db) {
         } else {
             res.status(400).json({ errors });
         }
-    })
+    });
+
+    app.delete('/api/users/:_id', (req, res) => {
+        db.collection('users').deleteOne({ _id: new mongodb.ObjectId(req.params._id) }, (err, r) => {
+            if (err) { res.status(500).json({ errors: { global: err }}); return; }
+
+            res.json({});
+        })
+    });
 
     app.use((req, res) => {
         res.status(404).json({
@@ -49,7 +76,13 @@ mongodb.MongoClient.connect(dbUrl, function(err, db) {
                 global: "Stil working on it. Please try again later."
             }
         });
-    })
+    });
+
+    app.get('/api/users/_id', (req, res) => {
+        db.collection('users').findOne({ _id: new mongodb.ObjectId(req.params._id) }, (err, user) => {
+            res.json({ user });
+        })
+    });
 
     app.listen(8080, () => console.log('Server is running on localhost:8080'));
 

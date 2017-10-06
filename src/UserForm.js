@@ -2,20 +2,34 @@ import React from 'react';
 import classnames from 'classnames'
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
-import { saveUser } from './actions';
+import { saveUser, fetchUser, updateUser } from './actions';
 
 class UserForm extends React.Component {
     state = {
-        id: '',
-        email: '',
-        firstName: '',
-        lastName: '',
-        jobTitle: '',
-        birthday: '',
+        _id: this.props.user ? this.props.user._id : null,
+        id: this.props.user ? this.props.user.id : '',
+        email: this.props.user ? this.props.user.email : '',
+        firstName: this.props.user ? this.props.user.firstName : '',
+        lastName: this.props.user ? this.props.user.lastName : '',
+        jobTitle: this.props.user ? this.props.user.jobTitle : '',
+        birthday: this.props.user ? this.props.user.birthday : '',
         errors: {},
-        loading: false,
-        done: false
+        loading: false
     }
+
+    componentWillRecieveProps = (nextProps) => {
+        this.setState({
+            _id: nextProps.user._id,
+            id: nextProps.user.id,
+            email: nextProps.user.email,
+            firstName: nextProps.user.firstName,
+            lastName: nextProps.user.lastName,
+            jobTitle: nextProps.user.jobTitle,
+            birthday: nextProps.user.birthday
+        })
+    }
+
+ 
 
     handleChange = (e) => {
         if (!!this.state.errors[e.target.name]){
@@ -46,9 +60,10 @@ class UserForm extends React.Component {
         const isValid = Object.keys(errors).length === 0
 
         if (isValid) {
-            const { id, email, firstName, lastName, jobTitle, birthday } = this.state;
+            const { _id, id, email, firstName, lastName, jobTitle, birthday } = this.state;
             this.setState({ loading: true });
-            this.props.saveGame({ id, email, firstName, lastName, jobTitle, birthday }).then(
+       
+            this.props.saveGame({ _id, id, email, firstName, lastName, jobTitle, birthday }).then(
                 () =>  { this.setState({ done: true })},
                 (err) => err.response.json().then(({ errors }) => this.setState({ errors, loading: false}))
             );
@@ -136,10 +151,10 @@ class UserForm extends React.Component {
         )
         return (
             <div>
-                { this.state.done ? <Redirect to="/users" /> : form }
+                { form }
            </div>
         );
     }
 }
 
-export default connect(null, { saveGame })(UserForm);
+export default UserForm;

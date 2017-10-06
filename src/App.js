@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import { Link, Route } from 'react-router-dom';
 import UsersPage from './UsersPage';
 import UsersList from './UsersList';
+import UserFormPage from './UserFormPage';
 import './App.css';
 
 const ActiveLink = ({label, to, activeOnlyWhenExact}) => (
@@ -21,9 +22,9 @@ class App extends Component {
           <ActiveLink activeOnlyWhenExact to="/users/new" label="Add new user" />
         </div>
 
-        <Route exact path="/users" component={UsersPage} />
-        <Route path="/users/new" component={UsersPage} />
-        <Route path="/users/:_id" component={UsersPage} />
+        <Route exact path="/users" component={UserFormPage} />
+        <Route path="/users/new" component={UserFormPage} />
+        <Route path="/users/:_id" component={UserFormPage} />
       </div>
     );
   }

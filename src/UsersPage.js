@@ -1,7 +1,7 @@
 import React from 'react';
 import UsersList from './UsersList';
 import { connect } from 'react-redux';
-import { fetchGames } from './actions';
+import { fetchGames, deleteUser, fetchUsers } from './actions';
 
 
 class UsersPage extends React.Component {
@@ -14,7 +14,7 @@ componentDidMount() {
             <div>
                 <h1>Users List</h1>
 
-                <UsersList users={this.props.users} />
+                <UsersList users={this.props.users} deleteUser={this.props.deleteUser} />
             </div>
         );
     }
@@ -22,7 +22,8 @@ componentDidMount() {
 
 UsersPage.propTypes = {
     users: React.PropTypes.array.isRequired,
-    fetchUsers: React.PropTypes.func.isRequired
+    fetchUsers: React.PropTypes.func.isRequired,
+    deleteUser: React.PropTypes.func.isRequired
 }
 
 function mapStateToProps(state){
@@ -31,4 +32,4 @@ function mapStateToProps(state){
     }
 }
 
-export default connect(mapStateToProps, { fetchUsers })(UsersPage);
+export default connect(mapStateToProps, { fetchUsers, deleteUser })(UsersPage);
